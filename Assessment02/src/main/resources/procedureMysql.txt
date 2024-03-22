@@ -1,0 +1,144 @@
+SELECT  distinct FILM.TITLE as 'Movie Name',
+concat(actor.first_name,' ', actor.last_name) as 'ACTOR NAME' ,
+LANGUAGE.NAME AS 'AVALIABLE LANGUAGE ' ,category.name  as 'Movies Category'
+
+    FROM FILM
+             JOIN LANGUAGE ON FILM.LANGUAGE_ID = LANGUAGE.language_id
+             JOIN FILM_CATEGORY ON FILM.FILM_ID = FILM_CATEGORY.FILM_ID
+             JOIN film_actor on film_actor.actor_id=FILM.film_id
+             JOIN actor on actor.actor_id=film_actor.actor_id
+             JOIN category on category.category_id=FILM_CATEGORY.category_id
+
+             order by LANGUAGE.NAME ;
+
+
+
+---------------------------------------
+delimiter //
+create procedure viewActorMoviesDetails()
+begin
+
+SELECT  distinct FILM.TITLE as 'Movie Name',
+concat(actor.first_name,' ', actor.last_name) as 'ACTOR NAME' ,
+LANGUAGE.NAME AS 'AVALIABLE LANGUAGE ' ,category.name  as 'Movies Category'
+    FROM FILM
+             JOIN LANGUAGE ON FILM.LANGUAGE_ID = LANGUAGE.language_id
+             JOIN FILM_CATEGORY ON FILM.FILM_ID = FILM_CATEGORY.FILM_ID
+             JOIN film_actor on film_actor.actor_id=FILM.film_id
+             JOIN actor on actor.actor_id=film_actor.actor_id
+             JOIN category on category.category_id=FILM_CATEGORY.category_id
+
+             order by LANGUAGE.NAME ;
+
+             end //
+
+
+delimiter ;
+
+ call viewActorMoviesDetails();
+
+//
+
+delimiter //
+create procedure searchActorName(in name varchar(255))
+begin
+             SELECT DISTINCT
+    FILM.TITLE AS 'Name',
+    CONCAT(actor.first_name,' ', actor.last_name) AS 'ACTOR NAME',
+    LANGUAGE.NAME AS 'AVALIABLE LANGUAGE',
+    category.name AS 'Movies Category'
+FROM
+    FILM
+    JOIN LANGUAGE ON FILM.LANGUAGE_ID = LANGUAGE.language_id
+    JOIN FILM_CATEGORY ON FILM.FILM_ID = FILM_CATEGORY.FILM_ID
+    JOIN film_actor ON film_actor.actor_id = FILM.film_id
+    JOIN actor ON actor.actor_id = film_actor.actor_id
+    JOIN category ON category.category_id = FILM_CATEGORY.category_id
+WHERE
+   CONCAT(actor.first_name, ' ', actor.last_name) LIKE name;
+
+end //
+
+delimiter ;
+
+ call searchActorName('%GUINESS%');
+
+
+
+
+//search by language
+
+
+delimiter //
+create procedure searchByLanuage(in name varchar(255))
+begin
+             SELECT DISTINCT
+    FILM.TITLE AS 'Name',
+    CONCAT(actor.first_name,' ', actor.last_name) AS 'ACTOR NAME',
+    LANGUAGE.NAME AS 'AVALIABLE LANGUAGE',
+    category.name AS 'Movies Category'
+FROM
+    FILM
+    JOIN LANGUAGE ON FILM.LANGUAGE_ID = LANGUAGE.language_id
+    JOIN FILM_CATEGORY ON FILM.FILM_ID = FILM_CATEGORY.FILM_ID
+    JOIN film_actor ON film_actor.actor_id = FILM.film_id
+    JOIN actor ON actor.actor_id = film_actor.actor_id
+    JOIN category ON category.category_id = FILM_CATEGORY.category_id
+WHERE
+   LANGUAGE.NAME LIKE name;
+
+end //
+
+delimiter ;
+
+ call searchByLanuage('%English%');
+
+
+
+
+
+//search by category
+
+
+
+delimiter //
+create procedure searchByCategory(in name varchar(255))
+begin
+             SELECT DISTINCT
+    FILM.TITLE AS 'Name',
+    CONCAT(actor.first_name,' ', actor.last_name) AS 'ACTOR NAME',
+    LANGUAGE.NAME AS 'AVALIABLE LANGUAGE',
+    category.name AS 'Movies Category'
+FROM
+    FILM
+    JOIN LANGUAGE ON FILM.LANGUAGE_ID = LANGUAGE.language_id
+    JOIN FILM_CATEGORY ON FILM.FILM_ID = FILM_CATEGORY.FILM_ID
+    JOIN film_actor ON film_actor.actor_id = FILM.film_id
+    JOIN actor ON actor.actor_id = film_actor.actor_id
+    JOIN category ON category.category_id = FILM_CATEGORY.category_id
+WHERE
+   category.name LIKE name;
+
+end //
+
+delimiter ;
+
+ call searchByCategory('%Documentary%');
+
+
+
+//-------------------------------------
+
+delimiter //
+create procedure deleteByActorId(in actorId int)
+begin
+     update actor set flg_deleted=true where actor_id=actorId;
+end //
+
+delimiter ;
+
+ call deleteByActorId(1);
+
+
+
+
